@@ -18,12 +18,15 @@ void resetar_grid(char arr[8][8]) {
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             if ((i + j) % 2 == 1) {
-                if (i < 3)
+                if (i < 3){
                     arr[i][j] = 'b';
-                else if (i > 4)
+                }
+                else if (i > 4){
                     arr[i][j] = 'p'; 
-                else
+                }
+                else{
                     arr[i][j] = ' '; 
+                }
             }
             else {
                 arr[i][j] = ' '; 
