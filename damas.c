@@ -24,7 +24,8 @@ void resetar_grid(char arr[8][8]) {
                     arr[i][j] = 'p'; 
                 else
                     arr[i][j] = ' '; 
-            } else {
+            }
+            else {
                 arr[i][j] = ' '; 
             }
         }
