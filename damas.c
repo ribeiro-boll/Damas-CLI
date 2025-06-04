@@ -13,16 +13,41 @@
 #define jogador_branco 0
 #define jogador_preto 1
 
+#define morto 0
+#define vivo 1
+
+typedef struct{
+    int coordenada_x;
+    int coordenada_y;
+    int jogador;
+    int status_vida;
+} Pecas_jogador;
+
+int contador_pecas_b = 0;
+int contador_pecas_p = 0;
+
 char grid[8][8];
-void resetar_grid(char arr[8][8]) {
+void resetar_grid(char arr[8][8],Pecas_jogador *branco,Pecas_jogador *preto) {
+    contador_pecas_b = 0;
+    contador_pecas_p = 0;
+    branco = NULL;
+    preto = NULL;
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             if ((i + j) % 2 == 1) {
                 if (i < 3){
                     arr[i][j] = 'b';
+                    contador_pecas_b++;
+                    branco = (Pecas_jogador*)realloc(branco,contador_pecas_b*sizeof(Pecas_jogador));
+                    branco[contador_pecas_b-1].coordenada_x =i; 
+                    branco[contador_pecas_b-1].coordenada_y =j;
                 }
                 else if (i > 4){
-                    arr[i][j] = 'p'; 
+                    arr[i][j] = 'p';
+                    contador_pecas_p++;
+                    preto = (Pecas_jogador*)realloc(preto,contador_pecas_p*sizeof(Pecas_jogador));
+                    preto[contador_pecas_p-1].coordenada_x =i; 
+                    preto[contador_pecas_p-1].coordenada_y =j;
                 }
                 else{
                     arr[i][j] = ' '; 
@@ -36,6 +61,11 @@ void resetar_grid(char arr[8][8]) {
     return;
 }
 
+// fazer função para testar as structs criadas
+void printar_structs_branco_e_preto(Pecas_jogador branco,Pecas_jogador preto){
+
+    return;
+}
 
 void print_grid(char arr[8][8]){
     int contador =1;
@@ -53,8 +83,8 @@ void print_grid(char arr[8][8]){
 
 void selecionar_peca(int arr[2]){
     char letra;
-    int peca1=-1;
-    int peca2=-1;
+    int coordenada_y=-1;
+    int coordenada_x=-1;
     int characteres_digitados = 0;
     printf("\n");
     while (1) {
@@ -63,29 +93,29 @@ void selecionar_peca(int arr[2]){
         while ((letra = getchar())!='\n') {
             characteres_digitados++;
             if (characteres_digitados==1){
-                peca1=toupper(letra)-'A';
+                coordenada_y=toupper(letra)-'A';
             }
             if (characteres_digitados==2){
-                peca2=letra-'1';
+                coordenada_x=letra-'1';
             }
         }
-        printf("\n\nx: '%d'  |  y: '%d'   grid: '%c'        characteres inputados '%d'\n", peca1, peca2,grid[peca2][peca1], characteres_digitados);
+        printf("\n\nX: '%c'\nY: '%d'       \ngrid: '%c'\ncharacteres inputados '%d'\n", coordenada_x+1+'A', coordenada_y,grid[coordenada_x][coordenada_y], characteres_digitados);
         if (characteres_digitados > 2){
             continue;
         }
-        else if (peca1 >= 8 || peca1 < 0) {
+        else if (coordenada_y >= 8 || coordenada_y < 0) {
             continue;
         }
-        else if (peca2 >= 8 || peca2 < 0) {
+        else if (coordenada_x >= 8 || coordenada_x < 0) {
             continue;
         }
         else {
-            break;
+            break;\
         }
     }
     
-    arr[0] = peca1; // coluna
-    arr[1] = peca2; // linha
+    arr[0] = coordenada_y; // coluna
+    arr[1] = coordenada_x; // linha
 }
 
 // entraria a coordenada que fica no array "peca_selecionada"
@@ -95,10 +125,11 @@ void mover_peca(int arr[2]){
 
 
 int main(){
-    
+    Pecas_jogador *jogador_b = NULL;
+    Pecas_jogador *jogador_p = NULL;
     int jogador_atual = jogador_preto;
     int peca_selecionada[2];
-    resetar_grid(grid);
+    resetar_grid(grid,jogador_b,jogador_p);
     int ganhou_jogo = 0; 
     while(!ganhou_jogo){
         print_grid(grid);
