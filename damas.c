@@ -99,7 +99,7 @@ void selecionar_peca(int arr[2]){
                 coordenada_x=letra-'1';
             }
         }
-        printf("\n\nX: '%c'\nY: '%d'       \ngrid: '%c'\ncharacteres inputados '%d'\n", coordenada_x+1+'A', coordenada_y,grid[coordenada_x][coordenada_y], characteres_digitados);
+        printf("\n\nX: '%c'\nY: '%d'       \ngrid: '%c'\ncharacteres inputados '%d'\n", coordenada_x+'A', coordenada_y,grid[coordenada_x][coordenada_y], characteres_digitados);
         if (characteres_digitados > 2){
             continue;
         }
