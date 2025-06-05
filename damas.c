@@ -6,12 +6,15 @@
 
 #define WHITE "\033[37m"
 
+
 #define VAZIO ' '
 #define PRETO 'p'
 #define BRANCO 'b'
 
+
 #define jogador_branco 0
 #define jogador_preto 1
+
 
 #define morto 0
 #define vivo 1
@@ -19,7 +22,6 @@
 typedef struct{
     int coordenada_x;
     int coordenada_y;
-    int jogador;
     int status_vida;
 } Pecas_jogador;
 
@@ -27,27 +29,27 @@ int contador_pecas_b = 0;
 int contador_pecas_p = 0;
 
 char grid[8][8];
-void resetar_grid(char arr[8][8],Pecas_jogador *branco,Pecas_jogador *preto) {
+void resetar_grid(char arr[8][8],Pecas_jogador **branco,Pecas_jogador **preto) {
     contador_pecas_b = 0;
     contador_pecas_p = 0;
-    branco = NULL;
-    preto = NULL;
+    *branco = NULL;
+    *preto = NULL;
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             if ((i + j) % 2 == 1) {
                 if (i < 3){
                     arr[i][j] = 'b';
                     contador_pecas_b++;
-                    branco = (Pecas_jogador*)realloc(branco,contador_pecas_b*sizeof(Pecas_jogador));
-                    branco[contador_pecas_b-1].coordenada_x =i; 
-                    branco[contador_pecas_b-1].coordenada_y =j;
+                    (*branco) = (Pecas_jogador*)realloc(*branco,contador_pecas_b*sizeof(Pecas_jogador));
+                    (*branco)[contador_pecas_b-1].coordenada_x =j; 
+                    (*branco)[contador_pecas_b-1].coordenada_y =i;
                 }
                 else if (i > 4){
                     arr[i][j] = 'p';
                     contador_pecas_p++;
-                    preto = (Pecas_jogador*)realloc(preto,contador_pecas_p*sizeof(Pecas_jogador));
-                    preto[contador_pecas_p-1].coordenada_x =i; 
-                    preto[contador_pecas_p-1].coordenada_y =j;
+                    (*preto) = (Pecas_jogador*)realloc(*preto,contador_pecas_p*sizeof(Pecas_jogador));
+                    (*preto)[contador_pecas_p-1].coordenada_x =j; 
+                    (*preto)[contador_pecas_p-1].coordenada_y =i;
                 }
                 else{
                     arr[i][j] = ' '; 
@@ -62,8 +64,19 @@ void resetar_grid(char arr[8][8],Pecas_jogador *branco,Pecas_jogador *preto) {
 }
 
 // fazer função para testar as structs criadas
-void printar_structs_branco_e_preto(Pecas_jogador branco,Pecas_jogador preto){
-
+void printar_structs_branco_e_preto(Pecas_jogador *branco,Pecas_jogador *preto){
+    printf("\n");
+    printf("\n");
+    for(int i =0; i<contador_pecas_b;i++){
+        printf(" | (%d,%d) - (%c,%d)",branco[i].coordenada_x,branco[i].coordenada_y,branco[i].coordenada_x+'A',branco[i].coordenada_y+1);
+    }
+    printf(" |\n");
+    printf("\n");
+    printf("\n");
+    for(int i =0; i<contador_pecas_p;i++){
+        printf(" | (%d,%d) - (%c,%d)",preto[i].coordenada_x,preto[i].coordenada_y,preto[i].coordenada_x+'A',preto[i].coordenada_y+1);
+    }
+    printf(" |\n\n");
     return;
 }
 
@@ -120,20 +133,29 @@ void selecionar_peca(int arr[2]){
 
 // entraria a coordenada que fica no array "peca_selecionada"
 void mover_peca(int arr[2]){
-
+    
 }
 
 
 int main(){
-    Pecas_jogador *jogador_b = NULL;
-    Pecas_jogador *jogador_p = NULL;
+    
+Pecas_jogador *jogador_b = NULL;
+Pecas_jogador *jogador_p = NULL;
+
     int jogador_atual = jogador_preto;
     int peca_selecionada[2];
-    resetar_grid(grid,jogador_b,jogador_p);
+    resetar_grid(grid,&jogador_b,&jogador_p);
     int ganhou_jogo = 0; 
     while(!ganhou_jogo){
         print_grid(grid);
+        printar_structs_branco_e_preto(jogador_b, jogador_p);
+
+        /*
+        
         selecionar_peca(peca_selecionada);
+        
+        
+        */
         getchar();
         system("clear");
     }
