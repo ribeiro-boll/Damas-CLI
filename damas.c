@@ -707,7 +707,7 @@ int main() {
         } else if (pontos_preto == 12) {
             printf("parabens jogador preto, voce ganhou!!!");
         }
-        printf("deseja jogar novamente (s/n)? Default: s\n resposta: ");
+        printf("deseja jogar novamente (s/n)? Default: s resposta: ");
         if (toupper(resposta = getchar()) == 'N') {
             printf("\n\nobrigado por jogar!!!");
             break;
