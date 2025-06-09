@@ -1,3 +1,6 @@
 /output
 ./damas
 /.vscode
+.clang-format
+damas.exe
+damas
