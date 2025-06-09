@@ -210,7 +210,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     if (grid[y + 1][x - 1] == 'p' &&
                         grid[y + 2][x - 2] == ' ') {
                         capturas_possiveis++;
-                        printf("%d) coordenada (%c, %d)\n", capturas_possiveis,
+                        printf("%d)Captura possivel, na coordenada (%c, %d)\n", capturas_possiveis,
                                (x - 2) + 'A', (y + 2) + 1);
                     }
                 }
@@ -219,7 +219,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     if (grid[y + 1][x + 1] == 'p' &&
                         grid[y + 2][x + 2] == ' ') {
                         capturas_possiveis++;
-                        printf("%d) coordenada (%c, %d)\n", capturas_possiveis,
+                        printf("%d)Captura possivel, na coordenada (%c, %d)\n", capturas_possiveis,
                                (x + 2) + 'A', (y + 2) + 1);
                     }
                 }
@@ -227,7 +227,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     if (grid[y - 1][x - 1] == 'p' &&
                         grid[y - 2][x - 2] == ' ') {
                         capturas_possiveis++;
-                        printf("%d) coordenada (%c, %d)\n", capturas_possiveis,
+                        printf("%d)Captura possivel, na coordenada (%c, %d)\n", capturas_possiveis,
                                (x - 2) + 'A', (y - 2) + 1);
                     }
                 }
@@ -235,7 +235,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     if (grid[y - 1][x + 1] == 'p' &&
                         grid[y - 2][x + 2] == ' ') {
                         capturas_possiveis++;
-                        printf("%d) coordenada (%c, %d)\n", capturas_possiveis,
+                        printf("%d)Captura possivel, na coordenada (%c, %d)\n", capturas_possiveis,
                                (x + 2) + 'A', (y - 2) + 1);
                     }
                 }
@@ -245,7 +245,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     if (grid[y - 1][x - 1] == 'b' &&
                         grid[y - 2][x - 2] == ' ') {
                         capturas_possiveis++;
-                        printf("%d) coordenada (%c, %d)\n", capturas_possiveis,
+                        printf("%d)Captura possivel, na coordenada (%c, %d)\n", capturas_possiveis,
                                (x - 2) + 'A', (y - 2) + 1);
                     }
                 }
@@ -253,7 +253,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     if (grid[y - 1][x + 1] == 'b' &&
                         grid[y - 2][x + 2] == ' ') {
                         capturas_possiveis++;
-                        printf("%d) coordenada (%c, %d)\n", capturas_possiveis,
+                        printf("%d)Captura possivel, na coordenada (%c, %d)\n", capturas_possiveis,
                                (x + 2) + 'A', (y - 2) + 1);
                     }
                 }
@@ -261,7 +261,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     if (grid[y + 1][x - 1] == 'b' &&
                         grid[y + 2][x - 2] == ' ') {
                         capturas_possiveis++;
-                        printf("%d) coordenada (%c, %d)\n", capturas_possiveis,
+                        printf("%d)Captura possivel, na coordenada (%c, %d)\n", capturas_possiveis,
                                (x - 2) + 'A', (y + 2) + 1);
                     }
                 }
@@ -269,7 +269,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     if (grid[y + 1][x + 1] == 'b' &&
                         grid[y + 2][x + 2] == ' ') {
                         capturas_possiveis++;
-                        printf("%d) coordenada (%c, %d)\n", capturas_possiveis,
+                        printf("%d)Captura possivel, na coordenada (%c, %d)\n", capturas_possiveis,
                                (x + 2) + 'A', (y + 2) + 1);
                     }
                 }
@@ -383,7 +383,6 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     break;
                 } else if (grid[coordenada_peca[1] + 1][coordenada_peca[0] - 1] == 'b') {
                     (*pontos_preto)++;
-                    printf("1234234");
                     grid[coordenada_peca[1] + 1][coordenada_peca[0] - 1] = ' ';
                     grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
                     grid[coordenada_y][coordenada_x] = 'p';
