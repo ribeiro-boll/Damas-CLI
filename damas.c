@@ -18,8 +18,16 @@
 int contador_pecas_b = 0;
 int contador_pecas_p = 0;
 
-int jogador_atual = jogador_branco;
 
+int verifiar_se_vira_dama(int grid[8][8],int cordenada_x,int coordenada_y){
+
+    if (1){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
 char grid[8][8] = {{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                    {' ', 'b', ' ', ' ', ' ', 'b', ' ', ' '},
                    {'b', ' ', ' ', ' ', ' ', ' ', 'p', ' '},
@@ -125,7 +133,8 @@ void resetar_grid(char arr[8][8]) {
 
 
 void print_grid(char arr[8][8], int pontos_branco, int pontos_preto) {
-    system("clear");
+    //system("clear");
+    system("cls");
     int contador = 1;
     printf("\n (A)  (B)  (C)  (D)  (E)  (F)  (G)  (H)\n\n");
     for (int i = 0; i < 8; i++) {
@@ -412,7 +421,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
     return;
 }
 
-void mover_peca_normal(char grid[8][8], int coordenada_peca[2], int jogador,
+void mover_peca_normal(char grid[8][8], int coordenada_peca[2], int *jogador,
                        int *pontos_branco, int *pontos_preto) {
     char letra;
     char *jogadores_str[2] = {"Branco", "Preto"};
@@ -425,8 +434,8 @@ void mover_peca_normal(char grid[8][8], int coordenada_peca[2], int jogador,
     while (1) {
         characteres_digitados = 0;
         printf("\nJogador %s, digite a onde deseja mover a peca de "
-               "coordenada: (%c, %d): ",
-               jogadores_str[jogador], coordenada_peca[0] + 'A',
+               "coordenada: (%c, %d)\nCaso queira escolher outra peca, apenas aperte 'enter' sem caracteres digitados: ",
+               jogadores_str[*jogador], coordenada_peca[0] + 'A',
                coordenada_peca[1] + 1);
         while ((letra = getchar()) != '\n') {
             characteres_digitados++;
@@ -437,7 +446,10 @@ void mover_peca_normal(char grid[8][8], int coordenada_peca[2], int jogador,
                 coordenada_y = letra - '1';
             }
         }
-
+        if (characteres_digitados == 0){
+            (*jogador)++;
+            break;
+        }
         if (characteres_digitados > 2) {
             print_grid(grid, *pontos_branco, *pontos_preto);
             printf("\nDigite apenas duas coordenadas!\n");
@@ -456,7 +468,7 @@ void mover_peca_normal(char grid[8][8], int coordenada_peca[2], int jogador,
                    coordenada_peca[1] + 1 == coordenada_y) ||
                   (coordenada_peca[0] - 1 == coordenada_x &&
                    coordenada_peca[1] + 1 == coordenada_y)) &&
-                 jogador == jogador_branco &&
+                 *jogador == jogador_branco &&
                  grid[coordenada_y][coordenada_x] == ' ') {
             grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
             grid[coordenada_y][coordenada_x] = 'b';
@@ -465,7 +477,7 @@ void mover_peca_normal(char grid[8][8], int coordenada_peca[2], int jogador,
                      coordenada_peca[1] - 1 == coordenada_y) ||
                     (coordenada_peca[0] - 1 == coordenada_x &&
                      coordenada_peca[1] - 1 == coordenada_y)) &&
-                   jogador == jogador_preto &&
+                   *jogador == jogador_preto &&
                    grid[coordenada_y][coordenada_x] == ' ') {
             grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
             grid[coordenada_y][coordenada_x] = 'p';
@@ -523,7 +535,7 @@ void mover_peca_normal(char grid[8][8], int coordenada_peca[2], int jogador,
                      coordenada_peca[1] - 2 == coordenada_y) ||
                     (coordenada_peca[0] - 2 == coordenada_x &&
                      coordenada_peca[1] - 2 == coordenada_y)) &&
-                   jogador == jogador_preto &&
+                   *jogador == jogador_preto &&
                    grid[coordenada_y][coordenada_x] == ' ') {
             if (grid[coordenada_peca[1] + 1][coordenada_peca[0] - 1] == 'b') {
                 (*pontos_preto)++;
@@ -546,7 +558,7 @@ void mover_peca_normal(char grid[8][8], int coordenada_peca[2], int jogador,
                      coordenada_peca[1] + 2 == coordenada_y) ||
                     (coordenada_peca[0] - 2 == coordenada_x &&
                      coordenada_peca[1] + 2 == coordenada_y)) &&
-                   jogador == jogador_preto &&
+                   *jogador == jogador_preto &&
                    grid[coordenada_y][coordenada_x] == ' ') {
             if (grid[coordenada_peca[1] + 1][coordenada_peca[0] + 1] == 'b') {
                 (*pontos_preto)++;
@@ -570,22 +582,21 @@ void mover_peca_normal(char grid[8][8], int coordenada_peca[2], int jogador,
         else {
             print_grid(grid, *pontos_branco, *pontos_preto);
             printf(
-                "\nDigite apenas coordenadas validas!\n(%d, %d) -> (%c, %d)\n",
-                coordenada_x, coordenada_y, coordenada_x + 'A',
-                coordenada_y + 1);
+                "\nDigite apenas coordenadas validas!\n");
+            //printf("(%d, %d) -> (%c, %d)\n",coordenada_x, coordenada_y, coordenada_x + 'A',coordenada_y + 1);
             continue;
         }
     }
     if (cond_comeu_peca) {
         int arr_nova_coordenada[2] = {coordenada_x, coordenada_y};
-        verificar_captura_mais_pecas(grid, jogador, arr_nova_coordenada,
+        verificar_captura_mais_pecas(grid, *jogador, arr_nova_coordenada,
                                      pontos_preto, pontos_branco);
     }
 
     return;
 }
 
-void selecionar_peca(int arr[2], char grid[8][8], int jogador,
+void selecionar_peca(int arr[2], char grid[8][8], int *jogador,
                      int *pontos_branco, int *pontos_preto) {
     char letra;
     char *jogadores_str[2] = {"Branco", "Preto"};
@@ -596,8 +607,8 @@ void selecionar_peca(int arr[2], char grid[8][8], int jogador,
     while (1) {
         characteres_digitados = 0;
         printf(
-            "Jogador atual: %s\nDigite a coordenada da peca (ex: a2): ",
-            jogadores_str[jogador]);
+            "Jogador atual: %s\n\nPara desistir da partida, digite 'ff'\n\nDigite a coordenada da peca (ex: a2): ",
+            jogadores_str[*jogador]);
         while ((letra = getchar()) != '\n') {
             characteres_digitados++;
             if (characteres_digitados == 1) {
@@ -606,6 +617,16 @@ void selecionar_peca(int arr[2], char grid[8][8], int jogador,
 
             if (characteres_digitados == 2) {
                 coordenada_y = letra - '1';
+            }
+        }
+        if (coordenada_x+'A' == 'F' && coordenada_y+17 == 'F'){
+            if (*jogador == jogador_branco){
+                *pontos_preto = 12;
+                break;
+            }
+            else {
+                *pontos_branco = 12;
+                break;
             }
         }
 
@@ -632,13 +653,13 @@ void selecionar_peca(int arr[2], char grid[8][8], int jogador,
         }
 
         else if (grid[coordenada_y][coordenada_x] == 'b' &&
-                 jogador == jogador_branco) {
+                 (*jogador) == jogador_branco) {
             arr[1] = coordenada_y;
             arr[0] = coordenada_x;
             printf("\n\n(%d,%d) -> %c\n", arr[0], arr[1],
                    grid[coordenada_y][coordenada_x]);
-            if (quick_verificar(grid, jogador, arr)) {
-                verificar_captura_mais_pecas(grid, jogador, arr, pontos_preto,
+            if (quick_verificar(grid, *jogador, arr)) {
+                verificar_captura_mais_pecas(grid, *jogador, arr, pontos_preto,
                                              pontos_branco);
             } else {
                 mover_peca_normal(grid, arr, jogador, pontos_branco,
@@ -648,13 +669,13 @@ void selecionar_peca(int arr[2], char grid[8][8], int jogador,
         }
 
         else if (grid[coordenada_y][coordenada_x] == 'p' &&
-                 jogador == jogador_preto) {
+                 (*jogador) == jogador_preto) {
             arr[1] = coordenada_y;
             arr[0] = coordenada_x;
             printf("\n\n(%d,%d) -> %c\n", coordenada_x, coordenada_y,
                    grid[coordenada_y][coordenada_x]);
-            if (quick_verificar(grid, jogador, arr)) {
-                verificar_captura_mais_pecas(grid, jogador, arr, pontos_preto,
+            if (quick_verificar(grid, *jogador, arr)) {
+                verificar_captura_mais_pecas(grid, *jogador, arr, pontos_preto,
                                              pontos_branco);
             } else {
                 mover_peca_normal(grid, arr, jogador, pontos_branco,
@@ -683,7 +704,8 @@ void selecionar_peca(int arr[2], char grid[8][8], int jogador,
 
 int main() {
     while (1) {
-        system("clear");
+        //system("clear");
+        system("cls");
         int pontos_preto;
         int pontos_branco;
         char resposta;
@@ -692,22 +714,25 @@ int main() {
         int ganhou_jogo = 0;
         pontos_branco = 0;
         pontos_preto = 0;
+        int jogador_atual = jogador_branco;
         while (pontos_branco < 12 && pontos_preto < 12) {
             print_grid(grid, pontos_branco, pontos_preto);
-            selecionar_peca(coordenada_peca, grid, jogador_atual,
+            selecionar_peca(coordenada_peca, grid, &jogador_atual,
                             &pontos_branco, &pontos_preto);
-            system("clear");
+            //system("clear");
+            system("cls");
             jogador_atual++;
             jogador_atual %= 2;
         }
-        system("clear");
+        //system("clear");
+        system("cls");
         printf("\n\n\n");
         if (pontos_branco == 12) {
-            printf("parabens jogador branco, voce ganhou!!!");
+            printf("parabens jogador branco, voce ganhou!!!\n\n");
         } else if (pontos_preto == 12) {
-            printf("parabens jogador preto, voce ganhou!!!");
+            printf("parabens jogador preto, voce ganhou!!!\n\n");
         }
-        printf("deseja jogar novamente (s/n)? Default: s resposta: ");
+        printf("deseja jogar novamente (s/n)? Default: s\n\nresposta: ");
         if (toupper(resposta = getchar()) == 'N') {
             printf("\n\nobrigado por jogar!!!");
             break;
