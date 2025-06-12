@@ -391,7 +391,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     }
                     cond_comeu_peca += 1;
                     break;
-                } else if (tolower(grid[coordenada_x + 1][coordenada_x + 1]) == 'b') {
+                } else if (tolower(grid[coordenada_y + 1][coordenada_x + 1]) == 'b') {
                     (*pontos_preto)++;
                     grid[coordenada_peca[1] - 1][coordenada_peca[0] - 1] = ' ';
                     grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
@@ -994,7 +994,7 @@ grid[coordenada_peca[1] + 1][coordenada_peca[0] + 1]
 
 */
 int main() {
-    int modo_debug = 1;
+    int modo_debug = 0;
     while (1) {
         system(CLEAR_SCREEN);
         
