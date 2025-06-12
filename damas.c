@@ -5,6 +5,10 @@
 #include <unistd.h>
 
 
+
+#define branco  "\033[0;36m"
+#define preto   "\033[0;31m"
+
 #define jogador_branco 0
 #define jogador_preto 1
 
@@ -20,12 +24,12 @@ void mover_peca_dama(char grid[8][8], int coordenada_peca[2], int *jogador,int *
 int verifiar_se_vira_dama(char grid[8][8],int jogador,int cordenada_x,int coordenada_y);
 int quick_verificar_dama(char grid[8][8], int jogador, int peca_selecionada[2]);
 char grid[8][8] = {{' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                   {'B', 'p', ' ', 'p', ' ', ' ', ' ', ' '},
-                   {'B', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                   {' ', 'p', ' ', ' ', ' ', ' ', ' ', ' '},
                    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                   {' ', ' ', ' ', 'p', 'p', 'p', ' ', ' '},
-                   {'b', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                   {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                   {' ', ' ', 'p', ' ', 'p', ' ', ' ', ' '},
+                   {' ', ' ', ' ', 'b', ' ', ' ', ' ', ' '},
+                   {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                   {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                    {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}};
 int quick_verificar(char grid[8][8], int jogador, int peca_selecionada[2]) {
     int x = peca_selecionada[0];
@@ -108,10 +112,10 @@ void resetar_grid(char arr[8][8],int modo_debug) {
         for (int j = 0; j < 8; j++) {
             if ((i + j) % 2 == 1) {
                 if (i < 3) {
-                    arr[i][j] = 'b';
+                    arr[i][j] = 'p';
                     contador_pecas_b++;
                 } else if (i > 4) {
-                    arr[i][j] = 'p';
+                    arr[i][j] = 'b';
                     contador_pecas_p++;
                 } else {
                     arr[i][j] = ' ';
@@ -130,13 +134,27 @@ void print_grid(char arr[8][8], int pontos_branco, int pontos_preto) {
     system(CLEAR_SCREEN);
     
     int contador = 1;
-    printf("\n (A)  (B)  (C)  (D)  (E)  (F)  (G)  (H)\n\n");
+    printf("\n\033[0;33m A  B  C  D  E  F  G  H \033[0m \n\n");
     for (int i = 0; i < 8; i++) {
         
         for (int j = 0; j < 8; j++) {
-            printf("[ %c ]", arr[i][j]);
+            
+            if (arr[i][j] == 'b' || arr[i][j] == 'B') {
+                printf("\033[0;36m %c \033[0m", arr[i][j]);  
+            }
+            else if (arr[i][j] == 'p' || arr[i][j] == 'P') {
+                printf("\033[0;31m %c \033[0m", arr[i][j]); 
+            }
+            else if ((i + j) % 2 == 0){
+                printf("\033[47;31m ");
+                printf("  \033[0m");
+            }
+            else {
+                printf(" ");
+                printf("  ");
+            }
         }
-        printf("   %d\n", contador++);
+        printf("\033[0;33m   %d\033[0m\n", contador++);
     }
     printf("\nPontos jogador branco: %d\nPontos jogador preto: %d\n\n",
            pontos_branco, pontos_preto);
@@ -272,8 +290,8 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                 }
             }
             characteres_digitados = 0;
-            printf("\nDigite a onde o jogador: %s\nDeseja mover a peca de "
-                   "coordenada: (%c, %d): ",
+            printf("\nCaptura possivel!\nDigite a onde o jogador: %s\nDeseja mover a peca de "
+                   "coordenada: (%c, %d), para capturar uma peca: ",
                    jogadores_str[jogador], coordenada_peca[0] + 'A',
                    coordenada_peca[1] + 1);
             while ((letra = getchar()) != '\n') {
@@ -305,7 +323,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                      jogador == jogador_branco &&
                      grid[coordenada_y][coordenada_x] == ' ') {
                 if (0){}
-                else if (grid[coordenada_peca[1] + 1][coordenada_peca[0] + 1] == 'p') {
+                else if (tolower(grid[coordenada_peca[1] + 1][coordenada_peca[0] + 1]) == 'p') {
                     (*pontos_branco)++;
                     grid[coordenada_peca[1] + 1][coordenada_peca[0] + 1] = ' ';
                     grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
@@ -316,31 +334,9 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     cond_comeu_peca += 1;
                     break;
                 } 
-                else if (grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1] == 'p') {
+                else if (tolower(grid[coordenada_peca[1] + 1][coordenada_peca[0] - 1]) == 'p') {
                     (*pontos_branco)++;
-                    grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1] = ' ';
-                    grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
-                    grid[coordenada_y][coordenada_x] = 'b';
-                    if (verifiar_se_vira_dama(grid,jogador,coordenada_x,coordenada_y)){
-                        cond_comeu_peca=-1;
-                    }
-                    cond_comeu_peca += 1;
-                    break;
-                }
-                else if (grid[coordenada_peca[1] + 1][coordenada_peca[0] + 1] == 'P') {
-                    (*pontos_branco)++;
-                    grid[coordenada_peca[1] + 1][coordenada_peca[0] + 1] = ' ';
-                    grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
-                    grid[coordenada_y][coordenada_x] = 'b';
-                    if (verifiar_se_vira_dama(grid,jogador,coordenada_x,coordenada_y)){
-                        cond_comeu_peca=-1;
-                    }
-                    cond_comeu_peca += 1;
-                    break;
-                } 
-                else if (grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1] == 'P') {
-                    (*pontos_branco)++;
-                    grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1] = ' ';
+                    grid[coordenada_peca[1] + 1][coordenada_peca[0] - 1] = ' ';
                     grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
                     grid[coordenada_y][coordenada_x] = 'b';
                     if (verifiar_se_vira_dama(grid,jogador,coordenada_x,coordenada_y)){
@@ -356,7 +352,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                        jogador == jogador_branco &&
                        grid[coordenada_y][coordenada_x] == ' ') {
                 if (0){}
-                else if (grid[coordenada_peca[1] - 1][coordenada_peca[0] - 1] ==
+                else if (tolower(grid[coordenada_peca[1] - 1][coordenada_peca[0] - 1]) ==
                     'p') {
                     (*pontos_branco)++;
                     grid[coordenada_peca[1] - 1][coordenada_peca[0] - 1] = ' ';
@@ -367,29 +363,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     }
                     cond_comeu_peca += 1;
                     break;
-                } else if (grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1] == 'p') {
-                    (*pontos_branco)++;
-                    grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1] = ' ';
-                    grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
-                    grid[coordenada_y][coordenada_x] = 'b';
-                    if (verifiar_se_vira_dama(grid,jogador,coordenada_x,coordenada_y)){
-                        cond_comeu_peca=-1;
-                    }
-                    cond_comeu_peca += 1;
-                    break;
-                }
-                else if (grid[coordenada_peca[1] - 1][coordenada_peca[0] - 1] ==
-                    'P') {
-                    (*pontos_branco)++;
-                    grid[coordenada_peca[1] - 1][coordenada_peca[0] - 1] = ' ';
-                    grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
-                    grid[coordenada_y][coordenada_x] = 'b';
-                    if (verifiar_se_vira_dama(grid,jogador,coordenada_x,coordenada_y)){
-                        cond_comeu_peca=-1;
-                    }
-                    cond_comeu_peca += 1;
-                    break;
-                } else if (grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1] == 'P') {
+                } else if (tolower(grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1]) == 'p') {
                     (*pontos_branco)++;
                     grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1] = ' ';
                     grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
@@ -407,7 +381,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                        jogador == jogador_preto &&
                        grid[coordenada_y][coordenada_x] == ' ') {
                 if (0) {}
-                else if (grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1] == 'b') {
+                else if (tolower(grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1]) == 'b') {
                     (*pontos_preto)++;
                     grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1] = ' ';
                     grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
@@ -417,29 +391,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     }
                     cond_comeu_peca += 1;
                     break;
-                } else if (grid[coordenada_peca[1] - 1][coordenada_peca[0] - 1] == 'b') {
-                    (*pontos_preto)++;
-                    grid[coordenada_peca[1] - 1][coordenada_peca[0] - 1] = ' ';
-                    grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
-                    grid[coordenada_y][coordenada_x] = 'p';
-                    if (verifiar_se_vira_dama(grid,jogador,coordenada_x,coordenada_y)){
-                        cond_comeu_peca=-1;
-                    }
-                    cond_comeu_peca += 1;
-                    break;
-                }
-                else if (grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1] == 'B') {
-                    (*pontos_preto)++;
-                    grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1] = ' ';
-                    grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
-                    grid[coordenada_y][coordenada_x] = 'p';
-                    if (verifiar_se_vira_dama(grid,jogador,coordenada_x,coordenada_y)){
-                        cond_comeu_peca=-1;
-                    }
-                    cond_comeu_peca += 1;
-                    break;
-                } 
-                else if (grid[coordenada_peca[1] - 1][coordenada_peca[0] - 1] == 'B') {
+                } else if (tolower(grid[coordenada_peca[1] - 1][coordenada_peca[0] - 1]) == 'b') {
                     (*pontos_preto)++;
                     grid[coordenada_peca[1] - 1][coordenada_peca[0] - 1] = ' ';
                     grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
@@ -456,7 +408,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                        jogador == jogador_preto &&
                        grid[coordenada_y][coordenada_x] == ' ') {
                 if (0){}
-                else if (grid[coordenada_peca[1] + 1][coordenada_peca[0] + 1] == 'b') {
+                else if (tolower(grid[coordenada_peca[1] + 1][coordenada_peca[0] + 1]) == 'b') {
                     (*pontos_preto)++;
                     grid[coordenada_peca[1] + 1][coordenada_peca[0] + 1] = ' ';
                     grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
@@ -466,7 +418,7 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     }
                     cond_comeu_peca += 1;
                     break;
-                } else if (grid[coordenada_peca[1] + 1][coordenada_peca[0] - 1] == 'b') {
+                } else if (tolower(grid[coordenada_peca[1] + 1][coordenada_peca[0] - 1]) == 'b') {
                     (*pontos_preto)++;
                     grid[coordenada_peca[1] + 1][coordenada_peca[0] - 1] = ' ';
                     grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
@@ -476,26 +428,6 @@ void verificar_captura_mais_pecas(char grid[8][8], int jogador,int coordenada_pe
                     }
                     cond_comeu_peca += 1;
                     break;
-                }
-                else if (grid[coordenada_peca[1] + 1][coordenada_peca[0] + 1] == 'B') {
-                    (*pontos_preto)++;
-                    grid[coordenada_peca[1] + 1][coordenada_peca[0] + 1] = ' ';
-                    grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
-                    grid[coordenada_y][coordenada_x] = 'p';
-                    if (verifiar_se_vira_dama(grid,jogador,coordenada_x,coordenada_y)){
-                        cond_comeu_peca=-1;
-                    }
-                    cond_comeu_peca += 1;
-                    break;
-                } else if (grid[coordenada_peca[1] + 1][coordenada_peca[0] - 1] == 'B') {
-                    (*pontos_preto)++;
-                    grid[coordenada_peca[1] + 1][coordenada_peca[0] - 1] = ' ';
-                    grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
-                    grid[coordenada_y][coordenada_x] = 'p';
-                    if (verifiar_se_vira_dama(grid,jogador,coordenada_x,coordenada_y)){
-                        cond_comeu_peca=-1;
-                    }
-                    continue;
                 }
 
                 else {
@@ -560,19 +492,19 @@ void mover_peca_normal(char grid[8][8], int coordenada_peca[2], int *jogador, in
         }
 
         else if (((coordenada_peca[0] + 1 == coordenada_x &&
-                   coordenada_peca[1] + 1 == coordenada_y) ||
+                   coordenada_peca[1] - 1 == coordenada_y) ||
                   (coordenada_peca[0] - 1 == coordenada_x &&
-                   coordenada_peca[1] + 1 == coordenada_y)) &&
+                   coordenada_peca[1] - 1 == coordenada_y)) &&
                  *jogador == jogador_branco &&
                  grid[coordenada_y][coordenada_x] == ' ') {
             grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
-            grid[coordenada_y][coordenada_x] = 'b', grid[coordenada_y][coordenada_x] = 'b';
+            grid[coordenada_y][coordenada_x] = 'b', 
             verifiar_se_vira_dama(grid,*jogador,coordenada_x,coordenada_y);
             break;
         } else if (((coordenada_peca[0] + 1 == coordenada_x &&
-                     coordenada_peca[1] - 1 == coordenada_y) ||
+                     coordenada_peca[1] + 1 == coordenada_y) ||
                     (coordenada_peca[0] - 1 == coordenada_x &&
-                     coordenada_peca[1] - 1 == coordenada_y)) &&
+                     coordenada_peca[1] + 1 == coordenada_y)) &&
                    *jogador == jogador_preto &&
                    grid[coordenada_y][coordenada_x] == ' ') {
             grid[coordenada_peca[1]][coordenada_peca[0]] = ' ';
@@ -651,8 +583,6 @@ void selecionar_peca(int arr[2], char grid[8][8], int *jogador, int *pontos_bran
                  (*jogador) == jogador_branco) {
             arr[1] = coordenada_y;
             arr[0] = coordenada_x;
-            printf("\n\n(%d,%d) -> %c\n", arr[0], arr[1],
-                   grid[coordenada_y][coordenada_x]);
             if (quick_verificar(grid, *jogador, arr)) {
                 verificar_captura_mais_pecas(grid, *jogador, arr, pontos_preto,
                                              pontos_branco);
@@ -667,9 +597,7 @@ void selecionar_peca(int arr[2], char grid[8][8], int *jogador, int *pontos_bran
                  (*jogador) == jogador_preto) {
             arr[1] = coordenada_y;
             arr[0] = coordenada_x;
-            printf("\n\n(%d,%d) -> %c\n", coordenada_x, coordenada_y,
-                   grid[coordenada_y][coordenada_x]);
-            if (quick_verificar_dama(grid, *jogador, arr)) {
+            if (quick_verificar(grid, *jogador, arr)) {
                 verificar_captura_mais_pecas(grid, *jogador, arr, pontos_preto,
                                              pontos_branco);
             } else {
@@ -683,8 +611,6 @@ void selecionar_peca(int arr[2], char grid[8][8], int *jogador, int *pontos_bran
                  *jogador == jogador_branco) {
             arr[1] = coordenada_y;
             arr[0] = coordenada_x;
-            printf("\n\n(%d,%d) -> %c\n", coordenada_x, coordenada_y,
-                   grid[coordenada_y][coordenada_x]);
             if (quick_verificar_dama(grid, *jogador, arr)) {
                 verificar_captura_mais_pecas_dama(grid, jogador, arr, pontos_preto,
                                              pontos_branco);
@@ -698,8 +624,6 @@ void selecionar_peca(int arr[2], char grid[8][8], int *jogador, int *pontos_bran
                 *jogador == jogador_preto) {
             arr[1] = coordenada_y;
             arr[0] = coordenada_x;
-            printf("\n\n(%d,%d) -> %c\n", coordenada_x, coordenada_y,
-                   grid[coordenada_y][coordenada_x]);
             if (quick_verificar_dama(grid, *jogador, arr)) {
                 verificar_captura_mais_pecas_dama(grid,jogador, arr, pontos_preto,
                                              pontos_branco);
@@ -831,8 +755,7 @@ void mover_peca_dama(char grid[8][8], int coordenada_peca[2], int *jogador, int 
     print_grid(grid, *pontos_branco, *pontos_preto);
     while (1) {
         characteres_digitados = 0;
-        printf("\nJogador %s (DAMA), digite onde deseja mover a peça de "
-               "coordenada: (%c, %d)\nCaso queira escolher outra peça, apenas aperte 'enter' sem caracteres digitados: ",
+        printf("\nJogador %s (DAMA), digite onde deseja mover a peça de coordenada: (%c, %d)\nCaso queira escolher outra peça, aperte 'enter' sem caracteres digitados: ",
                jogadores_str[*jogador], coordenada_peca[0] + 'A',
                coordenada_peca[1] + 1);
         
@@ -953,23 +876,16 @@ void verificar_captura_mais_pecas_dama(char grid[8][8], int *jogador, int coorde
                     for (int j = i + 1; j < 8; j++) {
                         int dest_x = x - j;
                         int dest_y = y - j;
-                        printf("%d) Capturar em diagonal superior-esquerda, pousar em (%c, %d)\n", 
-                               opcao++, dest_x + 'A', dest_y + 1); 
                         if (dest_x < 0 || dest_y < 0) break;
                         if (grid[dest_y][dest_x] != ' ') break;
-                        
-                        
                     }
                     break;
                 } else if (grid[check_y][check_x] != ' ') {
                     break;
                 }
             }
-            
-            
-            
-            
             characteres_digitados = 0;
+            printf("\n\nA dama pode capturar peças!\n");
             printf("\nDigite onde o jogador: %s\nDeseja mover a dama de "
                    "coordenada: (%c, %d): ",
                    jogadores_str[*jogador], coordenada_peca[0] + 'A',
@@ -1066,10 +982,19 @@ void verificar_captura_mais_pecas_dama(char grid[8][8], int *jogador, int coorde
         verificar_captura_mais_pecas_dama(grid, jogador, arr_nova_coordenada,
                                          pontos_preto, pontos_branco);
     }
+    else {
+        (*jogador)++;
+        return;
+    }
 }
+/*
 
+grid[coordenada_peca[1] - 1][coordenada_peca[0] + 1]
+grid[coordenada_peca[1] + 1][coordenada_peca[0] + 1]
+
+*/
 int main() {
-    int modo_debug = 0;
+    int modo_debug = 1;
     while (1) {
         system(CLEAR_SCREEN);
         
@@ -1084,10 +1009,8 @@ int main() {
         int jogador_atual = jogador_branco;
         while (pontos_branco < 12 && pontos_preto < 12) {
             print_grid(grid, pontos_branco, pontos_preto);
-            selecionar_peca(coordenada_peca, grid, &jogador_atual,
-                            &pontos_branco, &pontos_preto);
+            selecionar_peca(coordenada_peca, grid, &jogador_atual,&pontos_branco, &pontos_preto);
             system(CLEAR_SCREEN);
-            
             jogador_atual++;
             jogador_atual %= 2;
         }
@@ -1107,6 +1030,3 @@ int main() {
     }
     return 0;
 }
-
-
-
