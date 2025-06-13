@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 DELAY_TYPE=0.5      
-DELAY_BEFORE_ENTER=1 
-DELAY_AFTER_ENTER=1  
+DELAY_BEFORE_ENTER=0.5
+DELAY_AFTER_ENTER=0.5  
 MOVES=(
     C6 D5
 D3 C4
@@ -22,7 +22,7 @@ H5 F3
 E2 G4
 F7 H5 F3
 C8 g4 e2
-
+ff s
 )
 default_ifs=$IFS
 read -p "Foque na janela do jogo de damas e pressione Enter para iniciar..."
