@@ -804,7 +804,7 @@ void mover_peca_dama(char grid[8][8], int coordenada_peca[2], int *jogador,
         }
 
         if (characteres_digitados == 0) {
-            *jogador++;
+            (*jogador)++;
             break;
         }
 
